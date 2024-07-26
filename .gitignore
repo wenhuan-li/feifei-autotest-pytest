@@ -1,0 +1,11 @@
+# Pycharm
+.idea/
+.scannerwork/
+
+# Temp File
+*.ldb
+*.pyc
+__pycache__
+
+# Venv
+venv
