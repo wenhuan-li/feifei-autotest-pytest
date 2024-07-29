@@ -7,5 +7,6 @@
 *.pyc
 __pycache__
 
-# Venv
+# Ignore
 venv
+report
