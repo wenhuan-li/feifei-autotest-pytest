@@ -12,7 +12,7 @@ def test_main_case(case_data):
     instance = None
     allure.dynamic.suite(f"Case {case_data.get('case_id')}: {case_data.get('case_name')}")
     allure.dynamic.title(f"Step {case_data.get('step_id')}: {case_data.get('step_name')}")
-    print(case_data)
+    print(f"\nTest Case => {case_data}")
 
     route = case_data.get("route")
     if not route:
