@@ -2,3 +2,5 @@ allure-pytest==2.13.5
 allure-python-commons==2.13.5
 pytest==8.2.2
 pytest-assume==2.4.3
+playwright==1.39.0
+pyodbc==5.1.0
