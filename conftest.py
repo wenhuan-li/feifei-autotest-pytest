@@ -39,7 +39,11 @@ def playwright_context(request):
     headless = request.config.getoption("--headless")
     slowtime = request.config.getoption("--slowtime")
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=headless, slow_mo=float(slowtime))
+        browser = p.chromium.launch(
+            headless=headless,
+            slow_mo=float(slowtime),
+            executable_path="/opt/google/chrome"
+        )
         context = browser.new_context()
         yield context
         context.close()
