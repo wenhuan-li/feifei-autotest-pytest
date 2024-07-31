@@ -37,9 +37,9 @@ def pytest_collection_modifyitems(session, config, items):
 @pytest.fixture(scope="module")
 def playwright_context(request):
     headless = request.config.getoption("--headless")
-    slowmo = request.config.getoption("--slowtime")
+    slowtime = request.config.getoption("--slowtime")
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=headless, slow_mo=slowmo)
+        browser = p.chromium.launch(headless=headless, slow_mo=slowtime)
         context = browser.new_context()
         yield context
         context.close()
