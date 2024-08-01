@@ -82,52 +82,42 @@ def test_page_gui(case_data, page):
 
     last_dot_index = route.rfind(".")
     if last_dot_index == -1:
-        raise ValueError("=> Route format is invalid. Expected format: module.class.method")
+        raise ValueError("=> Route is invalid. Sample: module.class.method")
 
     module_path = route[:last_dot_index]
     module_name = route[route.rfind(".", 0, last_dot_index) + 1:last_dot_index]
     method_name = route[last_dot_index + 1:]
 
-    try:
-        # 加载模块
-        module = importlib.import_module(f"{mods_path}.{module_path}")
-        print(f"=> Load module {mods_path}.{module_path} success")
+    # 加载模块
+    if importlib.util.find_spec(f"{mods_path}.{module_path}") is None:
+        raise ImportError(f"=> Module not found: {module_path}")
+    module = importlib.import_module(f"{mods_path}.{module_path}")
+    print(f"=> Load module {mods_path}.{module_path} success")
 
-        # 加载主类
-        class_name = "".join(word.capitalize() for word in module_name.split("_"))
-        if not hasattr(module, class_name):
-            raise AttributeError(f"=> Class not found: {class_name}")
-        cls = getattr(module, class_name)
+    # 加载主类
+    class_name = "".join(word.capitalize() for word in module_name.split("_"))
+    if not hasattr(module, class_name):
+        raise AttributeError(f"=> Class not found: {class_name}")
+    cls = getattr(module, class_name)
 
-        # 生成实例
-        if not instance or class_name != type(instance).__name__:
-            instance = cls(page)
-        print(f"=> Load class {mods_path}.{module_path}.{class_name} success")
+    # 生成实例
+    if not instance or class_name != type(instance).__name__:
+        instance = cls(page)
+    print(f"=> Load class {mods_path}.{module_path}.{class_name} success")
 
-        # 加载方法或参数
-        if not hasattr(instance, method_name):
-            raise AttributeError(f"=> Method not found: {method_name}")
-        method = getattr(instance, method_name)
-        parameter = case_data.get("parameter")
-        print(f"=> Load method {mods_path}.{module_path}.{class_name}.{method_name} success")
+    # 加载方法或参数
+    if not hasattr(instance, method_name):
+        raise AttributeError(f"=> Method not found: {method_name}")
+    method = getattr(instance, method_name)
+    parameter = case_data.get("parameter")
+    print(f"=> Load method {mods_path}.{module_path}.{class_name}.{method_name} success")
 
-        # 调用方法执行测试
-        if parameter and len(parameter) > 0:
-            parameter = json.loads(parameter)
-            method(parameter)
-        else:
-            method()
-
-    except ModuleNotFoundError:
-        print(f"Module {module_name} not found.")
-    except ImportError as e:
-        print(f"An error occurred while importing {module_name}: {e}")
-    except json.JSONDecodeError as e:
-        print(f"Decoding JSON Error: {e}")
-    except ValueError as e:
-        print(f"ValueError: {e}")
-    except AttributeError as e:
-        print(f"AttributeError: {e}")
+    # 调用方法执行测试
+    if parameter and len(parameter) > 0:
+        parameter = json.loads(parameter)
+        method(parameter)
+    else:
+        method()
 
 
 if __name__ == "__main__":
