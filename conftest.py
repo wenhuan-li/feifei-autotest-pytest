@@ -41,8 +41,7 @@ def playwright_context(request):
     with sync_playwright() as p:
         browser = p.chromium.launch(
             headless=headless,
-            slow_mo=float(slowtime),
-            executable_path="/opt/google/chrome"
+            slow_mo=float(slowtime)
         )
         context = browser.new_context()
         yield context
@@ -67,6 +66,6 @@ def pytest_runtest_makereport(item, call):
             case_id = item.callspec.params.get("case_data").get("case_id")
             step_id = item.callspec.params.get("case_data").get("step_id")
             image_name = f"case_{case_id}_step_{step_id}.png"
-            screenshot_path = f"../output/screenshot/{image_name}"
+            screenshot_path = f"../target/screenshot/{image_name}"
             page.screenshot(path=screenshot_path)
             allure.attach.file(screenshot_path, name="screenshot", attachment_type=allure.attachment_type.PNG)
