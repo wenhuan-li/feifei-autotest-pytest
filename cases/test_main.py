@@ -12,7 +12,7 @@ def test_http_api(case_data):
     instance = None
     allure.dynamic.suite(f"Case {case_data.get('case_id')}: {case_data.get('case_name')}")
     allure.dynamic.title(f"Step {case_data.get('step_id')}: {case_data.get('step_name')}")
-    allure.dynamic.parameter(case_data, str(case_data), mode=ParameterMode.HIDDEN)
+    allure.dynamic.parameter(case_data, case_data.values, mode=ParameterMode.HIDDEN)
     print(f"\nTest Case => {case_data}")
 
     route = case_data.get("route")
