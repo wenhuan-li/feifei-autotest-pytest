@@ -21,7 +21,6 @@ def pytest_generate_tests(metafunc):
     if "case_data" in metafunc.fixturenames:
         cases = get_csv_datas(csv_file, scope)
         ids = [f"Step {case.get('step_id')}: {case.get('step_name')}" for case in cases]
-        cases[0]["case_id"] = "1"
         metafunc.parametrize("case_data", cases, ids=ids)
 
 
