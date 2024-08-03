@@ -15,11 +15,11 @@ def test_http_api(case_data):
 
     route = case_data.get("route")
     if not route:
-        raise ValueError("=> Route is missing")
+        raise ValueError(" => Route is missing")
 
     last_dot_index = route.rfind(".")
     if last_dot_index == -1:
-        raise ValueError("=> Route is invalid. Sample: module.class.method")
+        raise ValueError(" => Route is invalid. Sample: module.class.method")
 
     module_path = route[:last_dot_index]
     module_name = route[route.rfind(".", 0, last_dot_index) + 1:last_dot_index]
@@ -27,27 +27,27 @@ def test_http_api(case_data):
 
     # 加载模块
     if importlib.util.find_spec(f"{mods_path}.{module_path}") is None:
-        raise ImportError(f"=> Module not found: {module_path}")
+        raise ImportError(f" => Module not found: {module_path}")
     module = importlib.import_module(f"{mods_path}.{module_path}")
-    print(f"=> Load module {mods_path}.{module_path} success")
+    print(f" => Load module {module_path} success")
 
     # 加载主类
     class_name = "".join(word.capitalize() for word in module_name.split("_"))
     if not hasattr(module, class_name):
-        raise AttributeError(f"=> Class not found: {class_name}")
+        raise AttributeError(f" => Class not found: {class_name}")
     cls = getattr(module, class_name)
 
     # 生成实例
     if not instance or class_name != type(instance).__name__:
         instance = cls()
-    print(f"=> Load class {mods_path}.{module_path}.{class_name} success")
+    print(f" => Load class  {class_name} success")
 
     # 加载方法或参数
     if not hasattr(instance, method_name):
-        raise AttributeError(f"=> Method not found: {method_name}")
+        raise AttributeError(f" => Method not found: {method_name}")
     method = getattr(instance, method_name)
     parameter = case_data.get("parameter")
-    print(f"=> Load method {mods_path}.{module_path}.{class_name}.{method_name} success")
+    print(f" => Load method {method_name} success")
 
     # 调用方法执行测试
     if parameter and len(parameter) > 0:
@@ -65,11 +65,11 @@ def test_page_gui(case_data, page):
 
     route = case_data.get("route")
     if not route:
-        raise ValueError("=> Route is missing")
+        raise ValueError(" => Route is missing")
 
     last_dot_index = route.rfind(".")
     if last_dot_index == -1:
-        raise ValueError("=> Route is invalid. Sample: module.class.method")
+        raise ValueError(" => Route is invalid. Sample: module.class.method")
 
     module_path = route[:last_dot_index]
     module_name = route[route.rfind(".", 0, last_dot_index) + 1:last_dot_index]
@@ -77,27 +77,27 @@ def test_page_gui(case_data, page):
 
     # 加载模块
     if importlib.util.find_spec(f"{mods_path}.{module_path}") is None:
-        raise ImportError(f"=> Module not found: {module_path}")
+        raise ImportError(f" => Module not found: {module_path}")
     module = importlib.import_module(f"{mods_path}.{module_path}")
-    print(f"=> Load module {mods_path}.{module_path} success")
+    print(f" => Load module {module_path} success")
 
     # 加载主类
     class_name = "".join(word.capitalize() for word in module_name.split("_"))
     if not hasattr(module, class_name):
-        raise AttributeError(f"=> Class not found: {class_name}")
+        raise AttributeError(f" => Class not found: {class_name}")
     cls = getattr(module, class_name)
 
     # 生成实例
     if not instance or class_name != type(instance).__name__:
         instance = cls(page)
-    print(f"=> Load class {mods_path}.{module_path}.{class_name} success")
+    print(f" => Load class  {class_name} success")
 
     # 加载方法或参数
     if not hasattr(instance, method_name):
-        raise AttributeError(f"=> Method not found: {method_name}")
+        raise AttributeError(f" => Method not found: {method_name}")
     method = getattr(instance, method_name)
     parameter = case_data.get("parameter")
-    print(f"=> Load method {mods_path}.{module_path}.{class_name}.{method_name} success")
+    print(f" => Load method {method_name} success")
 
     # 调用方法执行测试
     if parameter and len(parameter) > 0:
