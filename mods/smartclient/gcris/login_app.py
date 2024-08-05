@@ -8,3 +8,4 @@ class LoginAPP:
 
     def open_app(self, path=r"C:\GCRIS2Client\Kodak.GCRIS.exe"):
         self.app = Application().start(path)
+
