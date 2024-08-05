@@ -5,6 +5,7 @@ from pywinauto import Application
 
 from utils.file_util import get_csv_datas
 
+
 # allure_path = None
 # allure_comm = None
 
@@ -84,6 +85,11 @@ def pytest_collection_modifyitems(session, config, items):
 
 
 @pytest.fixture(scope="module")
+def app():
+    return Application()
+
+
+@pytest.fixture(scope="module")
 def playwright_context(request):
     headless = request.config.getoption("--headless")
     slowtime = request.config.getoption("--slowtime")
@@ -118,8 +124,3 @@ def pytest_runtest_makereport(item, call):
             screenshot_path = f"../target/screenshot/{image_name}"
             page.screenshot(path=screenshot_path)
             allure.attach.file(screenshot_path, name="screenshot", attachment_type=allure.attachment_type.PNG)
-
-
-@pytest.fixture(scope="module")
-def app():
-    return Application()
