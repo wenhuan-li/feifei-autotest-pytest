@@ -1,7 +1,7 @@
 from pywinauto import Application
 
 
-class LoginAPP:
+class LoginApp:
 
     def __init__(self, app):
         self.app = app
