@@ -7,6 +7,7 @@ import time
 import allure
 import pytest
 from playwright.sync_api import sync_playwright
+from pywinauto import Application
 
 from utils.allure_util import AllureUtil
 from utils.file_util import get_csv_datas
@@ -126,3 +127,8 @@ def pytest_runtest_makereport(item, call):
             screenshot_path = f"../target/screenshot/{image_name}"
             page.screenshot(path=screenshot_path)
             allure.attach.file(screenshot_path, name="screenshot", attachment_type=allure.attachment_type.PNG)
+
+
+@pytest.fixture(scope="module")
+def app():
+    return Application()
