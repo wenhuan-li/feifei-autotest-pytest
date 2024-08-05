@@ -1,20 +1,12 @@
-import os
-import re
-import shutil
-import threading
-import time
-
 import allure
 import pytest
 from playwright.sync_api import sync_playwright
 from pywinauto import Application
 
-from utils.allure_util import AllureUtil
 from utils.file_util import get_csv_datas
 
-
-allure_path = None
-allure_comm = None
+# allure_path = None
+# allure_comm = None
 
 
 def pytest_addoption(parser):
@@ -70,7 +62,7 @@ def pytest_addoption(parser):
 #         allure_comm.change_windows_title(title)
 #         allure_comm.change_summary_title(title)
 #         allure_comm.append_latest_trend()
-#         # allure_comm.open_allure_html()
+#         allure_comm.open_allure_html()
 
 
 def pytest_generate_tests(metafunc):
