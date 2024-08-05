@@ -15,7 +15,7 @@ class LoginApp:
         time.sleep(5)
         self.app.kill()
 
-    def login_app(self, parameter):
+    def login(self, parameter):
         self.app["KODAK GC RIS 3.0"]["Edit0"].type_keys(parameter.get("username"), with_spaces=True)
         self.app["KODAK GC RIS 3.0"]["Edit2"].type_keys(parameter.get("password"), with_spaces=True)
         self.app["KODAK GC RIS 3.0"]["Edit2"].type_keys("{ENTER}")

@@ -15,7 +15,6 @@ from utils.file_util import get_csv_datas
 
 allure_path = None
 allure_comm = None
-report_time = None
 
 
 def pytest_addoption(parser):
@@ -79,7 +78,7 @@ def pytest_generate_tests(metafunc):
     scope = metafunc.config.getoption("scope").split(",")
     if "case_data" in metafunc.fixturenames:
         cases = get_csv_datas(csv_file, scope)
-        ids = [f"Step {case.get('step_id')}: {case.get('step_name')}" for case in cases]
+        ids = [f"STEP {case.get('step_id')}: {case.get('step_name')}" for case in cases]
         metafunc.parametrize("case_data", cases, ids=ids)
 
 
