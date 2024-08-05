@@ -1,8 +1,20 @@
+import os
+import re
+import shutil
+import threading
+import time
+
 import allure
 import pytest
 from playwright.sync_api import sync_playwright
 
+from utils.allure_util import AllureUtil
 from utils.file_util import get_csv_datas
+
+
+allure_path = None
+allure_comm = None
+report_time = None
 
 
 def pytest_addoption(parser):
@@ -13,6 +25,52 @@ def pytest_addoption(parser):
                      help="Specifies whether to enable headless mode during interface testing")
     parser.addoption("--slowtime", action="store", default=1000,
                      help="Specifies the global delay time for interface testing")
+
+
+def pytest_configure(config):
+    global allure_path, allure_comm
+    file_dir = config.getoption("file_or_dir")
+    report_time = time.strftime("%Y%m%d%H%M")
+    file_name = report_time if not file_dir else re.search(r"([^/\\]+)\.py", file_dir[0]).group(1)
+    allure_path = os.path.join(config.rootdir, "target", "report", file_name)
+    if not os.path.exists(allure_path):
+        os.makedirs(allure_path)
+    else:
+        old_history = os.path.join(allure_path, "html", "widgets", "history-trend.json")
+        if os.path.exists(old_history):
+            allure_comm = AllureUtil(config.rootdir, allure_path)
+            allure_comm.save_history_trend()
+    if not hasattr(config, "workerinput"):
+        shutil.rmtree(allure_path)
+    worker_id = threading.current_thread().ident
+    worker_dir = os.path.join(allure_path, f"worker_{worker_id}")
+    os.makedirs(worker_dir)
+    config.option.allure_report_dir = worker_dir
+
+
+def pytest_unconfigure(config):
+    global allure_comm
+    if not hasattr(config, "workerinput"):
+        worker_dirs = [f for f in os.listdir(allure_path) if f.startswith("worker_")]
+        for _dir in worker_dirs:
+            worker_dir = os.path.join(allure_path, _dir)
+            for file in os.listdir(worker_dir):
+                src = os.path.join(worker_dir, file)
+                dst = os.path.join(allure_path, file)
+                shutil.copy(src, dst)
+        for _dir in worker_dirs:
+            shutil.rmtree(os.path.join(allure_path, _dir))
+        title = os.path.basename(allure_path)
+        if allure_comm is None:
+            allure_comm = AllureUtil(config.rootdir, allure_path)
+        allure_comm.add_categories()
+        allure_comm.add_environment()
+        allure_comm.generate_report()
+        allure_comm.remove_title_parameters()
+        allure_comm.change_windows_title(title)
+        allure_comm.change_summary_title(title)
+        allure_comm.append_latest_trend()
+        # allure_comm.open_allure_html()
 
 
 def pytest_generate_tests(metafunc):
