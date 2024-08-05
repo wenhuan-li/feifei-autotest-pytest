@@ -9,7 +9,7 @@ class LoginApp:
         self.app = app
 
     def open_app(self, path=r"C:\GCRIS2Client\Kodak.GCRIS.exe"):
-        self.app = Application().start(path)
+        self.app = self.app.start(path)
 
     def close_app(self):
         time.sleep(5)
