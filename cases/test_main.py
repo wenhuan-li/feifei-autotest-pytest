@@ -9,7 +9,7 @@ mods_path = "mods"
 
 def test_http_api(case_data):
     instance = None
-    allure.dynamic.story("Story")
+    allure.dynamic.parent_suite("Parent Suite")
     allure.dynamic.suite(f"Case {case_data.get('case_id')}: {case_data.get('case_name')}")
     allure.dynamic.title(f"Step {case_data.get('step_id')}: {case_data.get('step_name')}")
     print(f"\nTest Case => {case_data}")
@@ -60,7 +60,7 @@ def test_http_api(case_data):
 
 def test_page_gui(case_data, page):
     instance = None
-    allure.dynamic.story("Story")
+    allure.dynamic.parent_suite("Parent Suite")
     allure.dynamic.suite(f"Case {case_data.get('case_id')}: {case_data.get('case_name')}")
     allure.dynamic.title(f"Step {case_data.get('step_id')}: {case_data.get('step_name')}")
     print(f"\nTest Case => {case_data}")
@@ -111,7 +111,7 @@ def test_page_gui(case_data, page):
 
 def test_app_gui(case_data, app):
     instance = None
-    allure.dynamic.story("Story")
+    allure.dynamic.parent_suite("Parent Suite")
     allure.dynamic.suite(f"Case {case_data.get('case_id')}: {case_data.get('case_name')}")
     allure.dynamic.title(f"Step {case_data.get('step_id')}: {case_data.get('step_name')}")
     print(f"\nTest Case => {case_data}")
