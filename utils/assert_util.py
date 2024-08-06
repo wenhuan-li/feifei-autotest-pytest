@@ -29,6 +29,7 @@ def assert_string(actual, expect, description=None, message=""):
     if description and len(description) > 0:
         allure.dynamic.description(f"#### {description}")
     _message = f"Test: {actual} | {expect}\t{message}"
+    print(_message)
     with allure.step(_message):
         pytest.assume(actual == expect, _message)
 

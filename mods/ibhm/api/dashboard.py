@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from confs.ibhm_conf import IBHMConf
-from utils.assert_util import assert_string, assert_dict
+from utils.assert_util import assert_string, assert_dict, assert_list
 from utils.http_util import HttpUtil
 from utils.pg_server_util import PgServerUtil
 
@@ -46,10 +46,10 @@ class Dashboard:
         actual = HttpUtil().get(url, params={"area": conv_area_cn_en(area)}).get("content")
         area = f"'东区','西区','南区','北区'" if area == "全国" else f"'{area}'"
         select = f"SELECT d.modality, count(*) FROM device_view d INNER JOIN ib_platinum_list_view ib ON d.serial_num = ib.equipment AND d.modality = ib.modality WHERE ib.platinum = true AND area IN ({area}) GROUP BY d.modality"
-        result = connector.connect().execute(select)
+        record = connector.connect().execute(select)
         expect = {}
         total = 0
-        for item in result:
+        for item in record:
             modality = item["modality"].lower()
             key = f"ib{modality.capitalize()}Num"
             expect[key] = item["count"]
@@ -57,3 +57,21 @@ class Dashboard:
         expect["ibTotal"] = total
         assert_dict(actual, expect, description=select, message=f"白金保IB数据_{area}")
         return self
+
+    def modality_health_status(self, parameter):
+        url = f"{base_url}/modality/health_status"
+        area = parameter.get("area", None)
+        modality = parameter.get("modality", None)
+        time_condition = parameter.get("time_condition", "month")
+        params = {
+            "modality": modality,
+            "area": conv_area_cn_en(area),
+            "time_condition": time_condition
+        }
+        actual = HttpUtil().get(url, params=params).get("content")
+        area = f"'东区','西区','南区','北区'" if area == "全国" else f"'{area}'"
+        select = f"SELECT health_status, count(*) FROM device_view WHERE area in ({area}) GROUP BY health_status"
+        expect = connector.connect().execute(select)
+        expect = [{"deviceNum": item["count"], "healthStatus": item["health_status"]} for item in expect]
+        assert_list(actual, expect, description=select, message=f"当前设备健康状况-{area}")
+
