@@ -16,12 +16,20 @@ password: str = IBHMConf().get(["database", "password"])
 connector = PgServerUtil(db_host, db_port, database, username, password)
 
 
-def conv_area_cn_en(cn):
-    area_dict = {"EAST_DISTRICT": "东区", "WEST_DISTRICT": "西区", "SOUTH_DISTRICT": "南区", "NORTH_DISTRICT": "北区",
-                 "ALL": "全国"}
-    for key, value in area_dict.items():
-        if value == cn:
+def conv_area_cn_en(area):
+    areas = {"EAST_DISTRICT": "东区", "WEST_DISTRICT": "西区", "SOUTH_DISTRICT": "南区", "NORTH_DISTRICT": "北区",
+             "ALL": "全国"}
+    for key, value in areas.items():
+        if value == area:
             return key
+    return None
+
+
+def conv_time_en_int(time_condition):
+    times = {"month": 30, "three_month": 90, "six_month": 180, "year": 365, "all": 9999}
+    for key, value in times.items():
+        if key == time_condition:
+            return value
     return None
 
 
@@ -44,7 +52,7 @@ class Dashboard:
         url = f"{base_url}/ib"
         area = parameter.get("area")
         actual = HttpUtil().get(url, params={"area": conv_area_cn_en(area)}).get("content")
-        area = f"'东区','西区','南区','北区'" if area == "全国" else f"'{area}'"
+        area = "'东区','西区','南区','北区'" if area == "全国" else f"'{area}'"
         select = f"SELECT d.modality, count(*) FROM device_view d INNER JOIN ib_platinum_list_view ib ON d.serial_num = ib.equipment AND d.modality = ib.modality WHERE ib.platinum = true AND area IN ({area}) GROUP BY d.modality"
         record = connector.connect().execute(select)
         expect = {}
@@ -69,9 +77,17 @@ class Dashboard:
             "time_condition": time_condition
         }
         actual = HttpUtil().get(url, params=params).get("content")
-        area = f"'东区','西区','南区','北区'" if area == "全国" else f"'{area}'"
-        select = f"SELECT health_status, count(*) FROM device_view WHERE area in ({area}) GROUP BY health_status"
+        area = "'东区','西区','南区','北区'" if area == "全国" else f"'{area}'"
+        select = "SELECT health_status, count(*) FROM device_view WHERE 1 = 1"
+        if area:
+            select += f" AND area in ({area})"
+        if modality:
+            select += f" AND modality = '{modality}'"
+        if time_condition:
+            time_int = conv_time_en_int(time_condition)
+            select += f" AND completion_time >= (CURRENT_TIMESTAMP  - INTERVAL '{time_int} days')"
+        select += " GROUP BY health_status"
         expect = connector.connect().execute(select)
         expect = [{"deviceNum": item["count"], "healthStatus": item["health_status"]} for item in expect]
         assert_list(actual, expect, description=select, message=f"当前设备健康状况-{area}")
-
+        return self
