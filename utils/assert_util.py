@@ -1,8 +1,6 @@
 import allure
 import pytest
 
-from utils.basic_util import num_to_str, bool_to_str, time_to_str
-
 
 def assert_list(actual_list, expect_list, description=None, message=""):
     for i in range(len(actual_list)):
@@ -21,9 +19,6 @@ def assert_dict(actual_dict, expect_dict, description=None, message=""):
         if not actual and not expect:
             continue
 
-        expect = num_to_str(expect)
-        expect = bool_to_str(expect)
-        expect = time_to_str(expect)
         _message = f"Test {key}: {actual} | {expect}\t{message}"
         print(_message)
         with allure.step(_message):
