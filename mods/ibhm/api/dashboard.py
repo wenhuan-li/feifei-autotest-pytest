@@ -22,12 +22,11 @@ class Dashboard:
     def __init__(self):
         pass
 
-    def get_latest_data_update_time(self):
+    def get_latest_data_update_time(self, parameter):
         url = f"{base_url}/getLatestDataUpdateTime"
         actual = HttpUtil().get(url)
         actual = actual.get("content").get("latestDataUpdateTime").replace("T", " ")
-        select = "SELECT date_trunc('second', MAX(completion_time)) AS max_create_at FROM t_questionnaire_instance"
-        expect = connector.connect().execute(select)
+        expect = connector.connect().execute(parameter.get("expect"))
         expect = datetime.strftime(expect[0]["max_create_at"], "%Y-%m-%d %H:%M:%S")
         assert_string(actual, expect, "数据更新时间")
         return self
