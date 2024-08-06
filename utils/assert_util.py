@@ -4,14 +4,14 @@ import pytest
 from utils.basic_util import num_to_str, bool_to_str, time_to_str
 
 
-def assert_list(actual_list, expect_list, description=None, message=None):
+def assert_list(actual_list, expect_list, description=None, message=""):
     for i in range(len(actual_list)):
         actual_dict = actual_list[i]
         expect_dict = expect_list[i]
         assert_dict(actual_dict, expect_dict, description, message)
 
 
-def assert_dict(actual_dict, expect_dict, description=None, message=None):
+def assert_dict(actual_dict, expect_dict, description=None, message=""):
     if description and len(description) > 0:
         allure.dynamic.description(f"#### Description：{description}")
     for key, actual in actual_dict.items():
@@ -30,7 +30,7 @@ def assert_dict(actual_dict, expect_dict, description=None, message=None):
             pytest.assume(actual == expect, _message)
 
 
-def assert_string(actual, expect, description=None, message=None):
+def assert_string(actual, expect, description=None, message=""):
     if description and len(description) > 0:
         allure.dynamic.description(f"#### Description：{description}")
     _message = f"Test: {actual} | {expect}\t{message}"
@@ -38,7 +38,7 @@ def assert_string(actual, expect, description=None, message=None):
         pytest.assume(actual == expect, _message)
 
 
-def assert_none(expect, description=None, message=None):
+def assert_none(expect, description=None, message=""):
     if description and len(description) > 0:
         allure.dynamic.description(f"#### Description：{description}")
     _message = f"Data not found is right\t{message}"
