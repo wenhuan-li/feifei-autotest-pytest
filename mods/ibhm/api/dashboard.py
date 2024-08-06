@@ -26,7 +26,8 @@ class Dashboard:
         url = f"{base_url}/getLatestDataUpdateTime"
         actual = HttpUtil().get(url)
         actual = actual.get("content").get("latestDataUpdateTime").replace("T", " ")
-        expect = connector.connect().execute(parameter.get("expect"))
+        select = parameter.get("expect")
+        expect = connector.connect().execute(select)
         expect = datetime.strftime(expect[0]["max_create_at"], "%Y-%m-%d %H:%M:%S")
         assert_string(actual, expect, "数据更新时间")
         return self
