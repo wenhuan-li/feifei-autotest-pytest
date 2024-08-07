@@ -7,12 +7,12 @@ from utils.pg_server_util import PgServerUtil
 
 host: str = IBHMConf().get(["backend", "host"])
 port: int = IBHMConf().get(["backend", "port"])
-base_url = f"http://{host}:{port}/api/dashboard"
 db_host: str = IBHMConf().get(["database", "host"])
 db_port: int = IBHMConf().get(["database", "port"])
 database: str = IBHMConf().get(["database", "dbname"])
 username: str = IBHMConf().get(["database", "username"])
 password: str = IBHMConf().get(["database", "password"])
+base_url = f"http://{host}:{port}/api/dashboard"
 connector = PgServerUtil(db_host, db_port, database, username, password)
 
 
@@ -49,7 +49,8 @@ class Dashboard:
 
     def dashboard_ib(self, parameter):
         url = f"{base_url}/ib"
-        actual = HttpUtil().get(url, params={"area": parameter.get("area")}).get("content")
+        params = {"area": parameter.get("area")}
+        actual = HttpUtil().get(url, params=params).get("content")
         record = connector.connect().execute(parameter.get("query"))
         expect = {}
         total = 0
@@ -64,16 +65,20 @@ class Dashboard:
 
     def modality_health_status(self, parameter):
         url = f"{base_url}/modality/health_status"
-        area = parameter.get("area", None)
-        modality = parameter.get("modality", None)
-        time_condition = parameter.get("time_condition", "month")
         params = {
-            "area": area,
-            "modality": modality,
-            "time_condition": time_condition
+            "area": parameter.get("area", None),
+            "modality": parameter.get("modality", None),
+            "time_condition": parameter.get("time_condition", "month")
         }
         actual = HttpUtil().get(url, params=params).get("content")
         expect = connector.connect().execute(parameter.get("query"))
-        expect = [{"deviceNum": item["count"], "healthStatus": item["health_status"]} for item in expect]
         assert_list(actual, expect, description=parameter)
+        return self
+
+    def e_alert_info(self, parameter):
+        url = f"{base_url}/e-alert/info"
+        params = {"area", parameter.get("area")}
+        actual = HttpUtil().get(url, params=params).get("content")
+        expect = connector.connect().execute(parameter.get("query"))
+        assert_dict(actual, expect, description=parameter)
         return self
