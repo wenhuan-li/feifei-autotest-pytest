@@ -1,2 +1,2 @@
-﻿case_id,case_name,step_id,step_name,method,route,parameter,hard_assert,scope
-0001,Test hello,1,Print hello,test_http_api,hello.hello.print_hello,,false,dev
+﻿case_id,case_name,step_id,step_name,method,route,parameter,scope,hard_assert
+1,Test hello,1,Print hello,test_http_api,hello.hello.print_hello,,dev,FALSE
