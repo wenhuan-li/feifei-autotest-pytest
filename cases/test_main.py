@@ -52,7 +52,6 @@ def test_http_api(case_data):
 
     # 调用方法执行测试
     if parameter and len(parameter) > 0:
-        allure.dynamic.parameter("case", value=parameter)
         parameter = json.loads(parameter)
         method(parameter)
     else:
