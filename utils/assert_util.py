@@ -26,7 +26,7 @@ def assert_dict(actual_dict, expect_dict, description=None, message=""):
         if not actual and not expect:
             continue
 
-        _message = f"Test {key}: {actual} | {expect}\t{message}"
+        _message = f"Test {message if message else ""}\t{key}: {actual} | {expect}"
         print(_message)
         with allure.step(_message):
             pytest.assume(actual == expect, _message)
@@ -35,7 +35,8 @@ def assert_dict(actual_dict, expect_dict, description=None, message=""):
 def assert_string(actual, expect, description=None, message=""):
     if description and len(description) > 0:
         allure.dynamic.description(f"{description}")
-    _message = f"Test: {actual} | {expect}\t{message}"
+
+    _message = f"Test {message if message else ""}\t{actual} | {expect}"
     print(_message)
     with allure.step(_message):
         pytest.assume(actual == expect, _message)
@@ -44,7 +45,8 @@ def assert_string(actual, expect, description=None, message=""):
 def assert_none(expect, description=None, message=""):
     if description and len(description) > 0:
         allure.dynamic.description(f"{description}")
-    _message = f"Data not found is right\t{message}"
+
+    _message = f"{message if message else ''} None is right"
     print(_message)
     with allure.step(_message):
         pytest.assume(expect is None, _message)
