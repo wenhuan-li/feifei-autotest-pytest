@@ -39,14 +39,14 @@ class DeviceDetail:
         actual = HttpUtil().get(url, params=params).get("content")[0].get("detailFields")
         record = connector.connect().execute(parameter.get("query"))[0]
         expect = []
-        for key, value in record.items():
+        for key, values in record.items():
             question_key, title = key.split(";")
-            values = "" if not value else value.split(";")
-            if "" == value: values = [""]
+            value = "" if not values else values.split(";")
+            if "" == values: value = [""]
             expect.append({
                 "questionKey": question_key,
                 "title": title,
-                "value": values
+                "value": value
             })
         assert_list(actual, expect, description=parameter)
         return self
