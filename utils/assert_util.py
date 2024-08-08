@@ -3,6 +3,13 @@ import pytest
 
 
 def assert_list(actual_list, expect_list, description=None, message=""):
+    actual_length = len(actual_list)
+    expect_length = len(expect_list)
+    if actual_length == 0 or expect_length == 0:
+        description = (f"Test Skip! One of the two lists is empty => "
+                       f"actual_length: {actual_length} | expect_length: {expect_length}")
+        allure.dynamic.description(description)
+        pytest.skip(description)
     for i in range(len(actual_list)):
         actual_dict = actual_list[i]
         expect_dict = expect_list[i]

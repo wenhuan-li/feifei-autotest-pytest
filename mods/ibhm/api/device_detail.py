@@ -62,3 +62,11 @@ class DeviceDetail:
         expect = connector.connect().execute(parameter.get("query"))
         assert_list(actual, expect, description=parameter)
         return self
+
+    def high_value_health_data_mr(self, parameter):
+        url = f"{base_url}/high-value/health-data/mr"
+        params = {"equipment": parameter.get("equipment")}
+        actual = HttpUtil().get(url, params=params)
+        expect = {}
+        assert_dict(actual, expect, description=parameter)
+        return self
