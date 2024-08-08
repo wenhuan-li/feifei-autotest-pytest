@@ -50,3 +50,15 @@ class DeviceDetail:
             })
         assert_list(actual, expect, description=parameter)
         return self
+
+    def chart(self, parameter):
+        url = f"{base_url}/chart"
+        params = {
+            "year": parameter.get("year"),
+            "modality": parameter.get("modality"),
+            "serialNum": parameter.get("serialNum")
+        }
+        actual = HttpUtil().get(url, params=params).get("content").get("assessments")
+        expect = connector.connect().execute(parameter.get("query"))
+        assert_list(actual, expect, description=parameter)
+        return self
