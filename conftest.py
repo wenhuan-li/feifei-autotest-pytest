@@ -23,7 +23,7 @@ def pytest_generate_tests(metafunc):
         cases = get_csv_datas(csv_file, scope)
         if not cases:
             pytest.skip("Test Skip! No cases found in csv file.")
-        ids = [f"STEP {case.get('step_id')}: {case.get('step_name')}" for case in cases]
+        ids = [f"{case.get('step_name')}" for case in cases]
         metafunc.parametrize("case_data", cases, ids=ids)
 
 
