@@ -3,6 +3,8 @@ import warnings
 from datetime import datetime
 from decimal import Decimal
 
+import pandas as pd
+
 
 def deprecated(reason):
     def decorator(func):
@@ -43,3 +45,15 @@ def time_to_str(value):
     if isinstance(value, datetime):
         return value.strftime("%Y-%m-%d %H:%M:%S")
     return value
+
+
+def is_float(value):
+    if isinstance(value, float):
+        return True
+    return False
+
+
+def is_pd_nan(value):
+    if pd.isna(value):
+        return True
+    return False
