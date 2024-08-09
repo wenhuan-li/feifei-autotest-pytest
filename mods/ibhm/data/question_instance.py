@@ -258,8 +258,7 @@ class QuestionInstance:
             }
             query = f"SELECT * FROM t_questionnaire_instance WHERE serial_num = '{serial_num}' AND completion_time = '{completion_time}'"
             record = connector.connect().execute(query)
-            if not record:
-                raise ValueError(f"Data not found ==> {query}")
+            pytest.assume(record, f"Data not found ==> {query}")
             expect = record[0]
             expect = {key: value.rstrip("0").rstrip(".") if key in ["score"] else value for key, value in expect.items()}
             assert_dict(actual, expect, message=f"{serial_num}, {completion_time}")
