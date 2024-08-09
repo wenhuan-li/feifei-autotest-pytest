@@ -66,7 +66,7 @@ class DeviceDetail:
     def high_value_health_data_mr(self, parameter):
         url = f"{base_url}/high-value/health-data/mr"
         params = {"equipment": parameter.get("equipment")}
-        actual = HttpUtil().get(url, params=params)
-        expect = {}
+        actual = HttpUtil().get(url, params=params).get("content")
+        expect = connector.connect().execute(parameter.get("query"))[0]
         assert_dict(actual, expect, description=parameter)
         return self

@@ -118,7 +118,7 @@ mr_rename_columns = {
     '小分_网络连接': 'mr_00029'
 }
 igt_rename_columns = {
-'Start time': 'start_time',
+    'Start time': 'start_time',
     'Completion time': 'completion_time',
     'Email': 'email',
     'Name': 'name',
